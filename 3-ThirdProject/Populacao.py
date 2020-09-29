@@ -1,14 +1,14 @@
 from Individuo import Individuo
 
 class Populacao:
-    def __init__(self, taxaCrossover, taxaMutacao, tamanhoPopulacao):
+    def __init__(self, taxaCrossover, taxaMutacao, tamanhoPopulacao, tamanhoCromossomo):
         self.individuos = []
+        self.geracaoAtual = 0
         #inicializando a poopulacao
         for i in range(tamanhoPopulacao):
-            self.individuos.append(Individuo())
+            self.individuos.append(Individuo(tamanhoCromossomo))
         
     def calculaFitness(self):
-        #print('calculando fitness')
         totalFitness = 0;
         
         for i in range(len(self.individuos)):
@@ -37,9 +37,14 @@ class Populacao:
             soma += self.individuos[i].fitness
         
         return soma / len(self.individuos)
+    
+    def evoluir(self):
+        self.geracaoAtual += 1
+        self.calculaFitness()
+        self.calculaRangeRoleta()
         
     def printPopulacao(self):
         for i in range(len(self.individuos)):
-            print('Individuo ' + str(i))
+            print('Individuo ' + str(i) + ' da geração ' + str(self.geracaoAtual))
             self.individuos[i].printCromossomo()
             print('')

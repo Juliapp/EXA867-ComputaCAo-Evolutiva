@@ -6,7 +6,8 @@ def binaryToInt(binaryList):
     return int(str1, 2)
 
 class Individuo :
-    def __init__(self):
+    def __init__(self, tamanhoCromossomo):
+        self.tamanhoCromossomo = tamanhoCromossomo
         self.cromossomo = []
         self.valor = 0
         self.fitness = 0
@@ -19,7 +20,7 @@ class Individuo :
         
     #preencher o cromossomo de forma aleatória
     def randomCromossomo(self):
-        for i in range(8):
+        for i in range(self.tamanhoCromossomo):
             if random() < 0.5:
                 self.cromossomo.append("0")
             else:
@@ -46,21 +47,9 @@ class Individuo :
             return True
         else:
             return False
-    
+            
     def printCromossomo(self):
-        print('Cromossomo: ' + str(self.cromossomo) + '| Valor: ' + str(self.valor) + ' | Fitness: ' + str(self.fitnessPercent))
+        print('Cromossomo: ' + str(self.cromossomo) + ' | Valor: ' + str(self.valor) + ' | Fitness: ' + str(self.fitnessPercent))
         print('Faixa da roleta: entre ' + str(self.faixaRoleta[0]) + ' e ' + str(self.faixaRoleta[1]))
         
-    '''
-    def crossover(self, outro_individuo):
-        corte = round(random()  * len(self.cromossomo))
-        
-        filho1 = outro_individuo.cromossomo[0:corte] + self.cromossomo[corte::]
-        filho2 = self.cromossomo[0:corte] + outro_individuo.cromossomo[corte::]
-        
-        filhos = [Individuo(), Individuo()]
-        
-        filhos[0].cromossomo = filho1
-        filhos[1].cromossomo = filho2
-        return filhos
-      '''  
+    
