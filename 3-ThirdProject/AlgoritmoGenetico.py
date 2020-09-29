@@ -12,6 +12,8 @@ class AlgoritmoGenetico:
     def executaAG(self):
         #populacao.
         print('executando AG')
+        self.populacao.calculaFitness()
+        self.populacao.calculaRangeRoleta()
         
     def roleta(self):
         numRoleta = random.random() * 100

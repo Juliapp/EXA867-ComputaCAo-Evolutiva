@@ -8,12 +8,14 @@ def binaryToInt(binaryList):
 class Individuo :
     def __init__(self):
         self.cromossomo = []
+        self.valor = 0
         self.fitness = 0
         self.fitnessPercent = 0
         self.faixaRoleta = []
         
         self.randomCromossomo()
-
+        self.atualizaValor()
+        
         
     #preencher o cromossomo de forma aleatória
     def randomCromossomo(self):
@@ -22,6 +24,12 @@ class Individuo :
                 self.cromossomo.append("0")
             else:
                 self.cromossomo.append("1")
+                
+    def atualizaValor(self):
+        self.valor = binaryToInt(self.cromossomo)
+        
+    def getFitnessPercent(self):
+        return self.fitnessPercent
     
     #Função pra mutar o bit
     def mutatBit(self, taxa_mutacao):
@@ -40,7 +48,8 @@ class Individuo :
             return False
     
     def printCromossomo(self):
-        print('Cromossomo: ' + str(self.cromossomo) + ' | Fitness: ' + str(self.fitness))
+        print('Cromossomo: ' + str(self.cromossomo) + '| Valor: ' + str(self.valor) + ' | Fitness: ' + str(self.fitnessPercent))
+        print('Faixa da roleta: entre ' + str(self.faixaRoleta[0]) + ' e ' + str(self.faixaRoleta[1]))
         
     '''
     def crossover(self, outro_individuo):

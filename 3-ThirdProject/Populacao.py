@@ -6,18 +6,30 @@ class Populacao:
         #inicializando a poopulacao
         for i in range(tamanhoPopulacao):
             self.individuos.append(Individuo())
+        
+    def calculaFitness(self):
+        #print('calculando fitness')
+        totalFitness = 0;
+        
+        for i in range(len(self.individuos)):
+            x = self.individuos[i].valor
+            y = round((10*(x**2)) + (2*x) + 30)
+            self.individuos[i].fitness = y
+            totalFitness += y
+        
+        for i in range(len(self.individuos)):
+            self.individuos[i].fitnessPercent = (self.individuos[i].fitness/totalFitness) * 100
             
-    def getPopulacao(self):
-        return self.individuos
+        self.individuos = sorted(self.individuos, key= Individuo.getFitnessPercent, reverse = True)
         
-    def setPopulacao(self, individuos):
-        self.individuos = individuos
+    def calculaRangeRoleta(self):
+        roleta = 0
+        for i in range(len(self.individuos)):
+            esquerda = roleta
+            direita = roleta + self.individuos[i].fitnessPercent
+            self.individuos[i].faixaRoleta = [esquerda, direita] 
+            roleta += self.individuos[i].fitnessPercent
         
-    def calcularFitness(self):
-        print('calculando fitness')
-        
-    def calcularFitnessPercent(self):
-        print('calculando fitness percent')
     
     def getMediaPopulacao(self):
         soma = 0
