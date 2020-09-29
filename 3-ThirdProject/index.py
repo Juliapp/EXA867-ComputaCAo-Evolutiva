@@ -8,4 +8,3 @@ TAMANHO_CROMOSSOMO = 8
 
 ag = AlgoritmoGenetico(TAXA_CROSSOVER, TAXA_MUTACAO, GERACOES, POPULACAO, TAMANHO_CROMOSSOMO)
 ag.executaAG()
-ag.populacao.printPopulacao()
