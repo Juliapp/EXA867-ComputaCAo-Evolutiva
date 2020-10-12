@@ -5,7 +5,7 @@ class Jogo:
     ####################### CONSTRUTOR #########################
     def __init__(self):
         self.tabuleiro = np.zeros(shape = (8,8), dtype = int)
-        self.rainhas = np.array([[-1, -1], [-1, -1], [-1, -1]])
+        self.rainhas = np.array([[-1, -1], [-1, -1], [-1, -1], [-1, -1]])
 
         #Inicializando as rainhas com tratamento de erro caso o random sortear 
         #a mesma posição mais de uma vez
@@ -169,7 +169,35 @@ class Jogo:
                 return True
             
         return False
+    
+    def getTabuleiro(self):
+        return self.tabuleiro
+    
+    def mutacao(self):
+        #Escolhendo uma das 4 rainhas para fazer a mutação
+        indexRainha = randint(0, 3)
+        
+        antigoX = self.rainhas[indexRainha][0]
+        antigoY = self.rainhas[indexRainha][1]
+        
+        #Escolhendo a nova posição dessa rainha
+        novoX = self.rand07();
+        novoY = self.rand07();
+        
+        #caso a posição que ele escolheu já esteja ocupada
+        while(not self.isEspacoOcupado(novoX, novoY)):
+            novoX = self.rand07();
+            novoY = self.rand07();
+        
+        #Trocando na referencia das rainhas
+        self.rainhas[indexRainha][0] = novoX
+        self.rainhas[indexRainha][1] = novoY
+        
+        #Fazendo a troca no tabuleiro
+        self.tabuleiro[antigoX][antigoY] = 0
+        self.tabuleiro[novoX][novoY] = 0
+        
         
     
 jogo = Jogo()
-jogo.initRainhas()
+jogo.printJogo()
