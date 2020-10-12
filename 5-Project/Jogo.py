@@ -29,6 +29,8 @@ class Jogo:
             y = self.rainhas[i][1]
             self.tabuleiro[x][y] = 1
             
+        self.totalPontuacao = self.pontuacao()
+            
     ###########################################################
         
     # Printando o tabuleiro 
@@ -38,7 +40,11 @@ class Jogo:
         for i in range(4):
             print('Rainha ' + str(i) + ' : ' + str(self.rainhas[i]))
             
+        print()
         print(self.tabuleiro)
+        print('A pontuação é de: ' + str(self.totalPontuacao))
+        print()
+        print('---------------------------------------')
             
     # Escolhe um inteiro entre 0 e 7
     # @return inteiro escolhido
@@ -54,15 +60,44 @@ class Jogo:
     
     def isEspacoOcupado(self, x, y):
         return [x,y] in self.rainhas.tolist()
-        
-    def hasConflito(self, x, y):
-        return (self.checkHorizontal(x, y) == False and self.checkVertical(x, y) == False and self.checkDiagonalPositivo(x, y) == False and self.checkDiagonalNegativo(x, y) == False)
     
+    # Soma dos conflitos totais no jogo
+    #    
+    # @return int
+    def pontuacao(self):
+        count = 0
+        for i in range(4):
+            x = self.rainhas[i][0]
+            y = self.rainhas[i][1]
+            count += self.conflitoRainha(x, y)
+            
+        return count / 2
+        
+    
+    # Faz os calculos de quantos conflitos uma peça no tabuleiro tem
+    #    
+    # @param int x          coord x
+    # @param int y          coord y
+    #    
+    # @return soma dos conflitos
+    def conflitoRainha(self, x, y):
+        return (self.checkHorizontal(x, y) + self.checkVertical(x, y) + self.checkDiagonalPositivo(x, y) + self.checkDiagonalNegativo(x, y))
+    
+    # Conflito de borda positiva
+    #    
+    # @param int value
+    #    
+    # @return se ele chegou no conflito, ele retorna pra o 0
     def checkBorderRight(self, value):
         if value == 8:
             return 0
         return value
         
+    # Conflito de borda negativa
+    #    
+    # @param int value
+    #    
+    # @return se ele chegou no conflito, ele retorna pra o 8
     def checkBorderLeft(self, value):
         if value == -1:
             return 8
@@ -75,17 +110,17 @@ class Jogo:
     #    
     # @return int count conflitos
     def checkHorizontal(self, x, y):
+        
+        countConflit = 0
         aux = x
         auy = y
         for i in range(7):
             aux += 1
             aux = self.checkBorderRight(aux)
             
-            print('x: ' + str(aux) + ' y: ' + str(auy))
-            
             if (self.tabuleiro[aux][auy] == 1) and (aux is not x):
-                return True
-        return False
+                countConflit += 1
+        return countConflit
     
     # Contagem de quantos conflitos existem na vertical
     #    
@@ -94,16 +129,16 @@ class Jogo:
     #    
     # @return int count conflitos
     def checkVertical(self, x, y):
+        countConflit = 0
         auy = y
         aux = x
         for i in range(7):
             auy += 1
             auy = self.checkBorderRight(auy)
-            print('x: ' + str(aux) + ' y: ' + str(auy))
-            
+
             if (self.tabuleiro[aux][auy] == 1) and (auy is not y):
-                return True
-        return False
+                countConflit += 1
+        return countConflit
     
     # Contagem de quantos conflitos existem na diagonal positiva
     #    
@@ -112,6 +147,7 @@ class Jogo:
     #    
     # @return int count conflitos            
     def checkDiagonalPositivo(self, x, y):
+        countConflit = 0
         auy = y
         aux = x
         for i in range(7):
@@ -131,13 +167,11 @@ class Jogo:
             #chegou na mesma peça
             if (aux == x) and (auy == y):
                 break
-        
-            print('x: ' + str(aux) + ' y: ' + str(auy))
             
             if self.tabuleiro[aux][auy] == 1:
-                return True
+                countConflit += 1
             
-        return False
+        return countConflit
         
     # Contagem de quantos conflitos existem na diagonal negativa
     #    
@@ -146,6 +180,7 @@ class Jogo:
     #    
     # @return int count conflitos        
     def checkDiagonalNegativo(self, x, y):
+        countConflit = 0
         auy = y
         aux = x
         for i in range(7):
@@ -163,15 +198,17 @@ class Jogo:
             if (aux == x) and (auy == y):
                 break
                     
-            print('x: ' + str(aux) + ' y: ' + str(auy))
-                    
             if self.tabuleiro[aux][auy] == 1:
-                return True
+                countConflit += 1
             
-        return False
+        return countConflit
     
     def getTabuleiro(self):
         return self.tabuleiro
+    
+    # Mutação de uma das rainhas
+    #    
+    # @return void
     
     def mutacao(self):
         #Escolhendo uma das 4 rainhas para fazer a mutação
@@ -181,13 +218,20 @@ class Jogo:
         antigoY = self.rainhas[indexRainha][1]
         
         #Escolhendo a nova posição dessa rainha
-        novoX = self.rand07();
-        novoY = self.rand07();
+        novoX = self.rand07()
+        novoY = self.rand07()
         
         #caso a posição que ele escolheu já esteja ocupada
-        while(not self.isEspacoOcupado(novoX, novoY)):
-            novoX = self.rand07();
-            novoY = self.rand07();
+        while True:
+            if self.isEspacoOcupado(novoX, novoY):
+                novoX = self.rand07()
+                novoY = self.rand07()                
+            else: 
+                break;
+                          
+        print('Swaping Rainha ' + str(indexRainha) + ' [' + str(antigoX) + ',' + str(antigoY) + ']')
+        print('Para a posição: ' + ' [' + str(novoX) + ',' + str(novoY) + ']')
+        print('========================')
         
         #Trocando na referencia das rainhas
         self.rainhas[indexRainha][0] = novoX
@@ -195,9 +239,6 @@ class Jogo:
         
         #Fazendo a troca no tabuleiro
         self.tabuleiro[antigoX][antigoY] = 0
-        self.tabuleiro[novoX][novoY] = 0
+        self.tabuleiro[novoX][novoY] = 1
         
-        
-    
-jogo = Jogo()
-jogo.printJogo()
+        self.totalPontuacao = self.pontuacao()
