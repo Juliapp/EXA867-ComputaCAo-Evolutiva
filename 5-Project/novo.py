@@ -1,10 +1,42 @@
 import numpy as np
+from random import randint
 
 class Jogo:
+    ####################### CONSTRUTOR ####################################
     def __init__(self):
         self.tabuleiro = np.zeros(shape = (8,8), dtype = int)
+        self.rainhas = np.zeros(shape = (4, 2), dtype = int)
         
         
+        #inicializando as rainhas
+        self.rainhas[0][0] = self.rand07()
+        self.rainhas[0][1] = self.rand07()
+        
+        aux = 1;
+        
+        while(True):
+            x = self.rand07()
+            y = self.rand07()
+            
+            if not ([x,y] in self.rainhas.tolist()):
+                self.rainhas[aux][0] = x
+                self.rainhas[aux][1] = y
+                
+                aux += 1               
+                
+            if aux == 4:
+                break
+            
+        #colocando as rainhas no tabuleiro
+        for i in range(4):
+            x = self.rainhas[i][0]
+            y = self.rainhas[i][1]
+            self.tabuleiro[x][y] = 1
+        
+    #########################################################################
+            
+    def rand07(self):
+        return randint(0, 7)
         
     def hasConflito(self, x, y):
         return (self.checkHorizontal(x, y) == False and self.checkVertical(x, y) == False and self.checkDiagonalPositivo(x, y) == False and self.checkDiagonalNegativo(x, y) == False)
@@ -85,9 +117,6 @@ class Jogo:
             aux += 1
             auy -= 1
             
-
-            #chegou na mesma peça
- 
             if auy == -1:
                 auy = aux - 1
                 aux = 0
@@ -108,4 +137,4 @@ class Jogo:
         
     
 jogo = Jogo()
-jogo.hasConflito(1, 7)
+jogo.initRainhas()
